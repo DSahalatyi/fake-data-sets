@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  {% for schema in schemas %}
+    <p>
+      {{ schema.id }}
+      {{ schema.name }}
+    Columns:
+      {% for column in schema.columns.all %}
+        {{ column.name }}
+        {% endfor %}
+    </p>
+  {% endfor %}
+{% endblock content %}

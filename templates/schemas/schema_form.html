@@ -1,0 +1,41 @@
+{% extends "_base.html" %}
+
+{% block content %}
+  <form id="form-container" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ column_formset.management_form }}
+    {% for form in column_formset %}
+      <div class="column-form">
+      {{ form.name.as_field_group }}
+      {{ form.data_type.as_field_group }}
+      {{ form.order.as_field_group }}
+
+      </div>
+    {% endfor %}
+  <button id="add-form" type="button">Add another column</button>
+  <button type="submit">Create Schema</button>
+  </form>
+  <script>
+    let columnForm = document.querySelectorAll(".column-form")
+    let container = document.querySelector("#form-container")
+    let addButton = document.querySelector("#add-form")
+    let totalForms = document.querySelector("#id_columns-TOTAL_FORMS")
+
+    let formNum = columnForm.length-1
+    addButton.addEventListener('click', addForm)
+
+    function addForm(e){
+        e.preventDefault()
+
+        let newForm = columnForm[0].cloneNode(true)
+        let formRegex = RegExp(`columns-(\\d)-`,'g')
+
+        formNum++
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `columns-${formNum}-`)
+        container.insertBefore(newForm, addButton)
+
+        totalForms.setAttribute('value', `${formNum+1}`)
+    }
+  </script>
+{% endblock content %}
